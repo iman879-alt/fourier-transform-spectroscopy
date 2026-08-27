@@ -6,74 +6,58 @@
 
 In this project, I used a Michelson interferometer as a Fourier-transform spectrometer to measure the visible emission spectrum of a low-pressure mercury lamp.
 
-A 632.8 nm HeNe laser was used as an external reference to calibrate the optical path difference (OPD). The mercury interferogram was then processed in Python and Fourier transformed to recover the emission spectrum.
+A 632.8 nm HeNe laser provided an external reference for calibrating the optical path difference (OPD). I then processed the mercury interferogram in Python and applied a Fourier transform to recover the emission spectrum.
 
-The main aim was to answer:
-
-> **How accurately can a simple Michelson Fourier-transform spectrometer, calibrated with a HeNe laser, recover the wavelengths and line profiles of the main visible emission lines of a low-pressure mercury lamp?**
-
-The analysis focused on three main questions:
+The project focused on three main questions:
 
 - How accurately could the known mercury emission wavelengths be recovered?
-- Which line-profile model best described the measured peaks?
-- How did the interferometer scan length affect spectral resolution?
+- Which spectral line-profile model best described the measured peaks?
+- How did interferometer scan length affect spectral resolution?
 
-## Experimental Approach
+## Experimental Setup
 
-Light from a mercury lamp and a HeNe laser was passed through a Michelson interferometer.
+The mercury lamp and HeNe reference laser were passed through a Michelson interferometer.
 
-One detector recorded the HeNe reference interferogram while a second detector simultaneously recorded the mercury signal. As one interferometer mirror moved, the changing optical path difference produced the interference signals used for the analysis.
+One detector recorded the HeNe reference interferogram while a second detector simultaneously recorded the mercury signal. As one mirror moved, the changing optical path difference generated the interference signals used for wavelength calibration and spectral reconstruction.
 
-The full measurement consisted of a 60-minute scan, corresponding to a maximum calibrated OPD of approximately **4.4 mm**. This gave a nominal instrumental resolution of approximately **0.04 nm** around the yellow mercury lines. 
+The full measurement used a 60-minute scan, corresponding to a maximum calibrated OPD of approximately **4.4 mm**.
 
-<!-- Add experimental setup diagram here -->
+<img width="400" alt="inteferometer drawio (1)" src="https://github.com/user-attachments/assets/da8d6d95-3e97-4c97-93e3-331642636451" />
 
-## Data Analysis
+*Michelson interferometer setup showing the mercury lamp, HeNe calibration laser, beam splitters, mirrors and detectors.*
 
-The raw detector signals required several processing steps before a reliable spectrum could be obtained.
+## Analysis
 
-### 1. Signal Pre-processing
+The raw interferograms were converted into a calibrated spectrum through several processing stages:
 
-Both detector signals were high-pass filtered using a second-order Butterworth filter to remove DC offsets and slow instrumental drift.
-
-The ends of the signals were removed to reduce filtering transients.
-
-### 2. Optical Path Difference Calibration
-
-The HeNe interferogram provided a stable wavelength reference.
-
-Zero crossings of the filtered HeNe signal were identified and used to construct a locally calibrated OPD axis. Because this calibration was not perfectly uniformly spaced, the mercury interferogram was then resampled onto a uniform OPD grid using cubic-spline interpolation. 
-
-<!-- Add OPD calibration figure here -->
-
-### 3. Fourier Transform
-
-A Hamming window was applied to reduce spectral sidelobes caused by the finite scan range.
-
-The processed interferogram was then Fourier transformed to convert the signal from optical path difference into spatial frequency and finally wavelength.
-
-The measured spectrum was also corrected for the wavelength-dependent responsivity of the photodiode.
-
-<!-- Add full mercury spectrum here -->
-
-### 4. Spectral-Line Fitting
-
-The main mercury features analysed were:
-
-- the green line near **546 nm**
-- the yellow doublet near **577 nm and 579 nm**
-
-Gaussian, Lorentzian and Voigt profiles were fitted to the measured peaks and compared using reduced chi-squared.
-
-The Voigt profile produced the lowest reduced chi-squared for both the green line and yellow doublet, so it was used to extract the final peak positions and widths.
-
-<!-- Add Voigt fit figure here -->
+1. **Signal filtering** — high-pass filtering removed DC offsets and slow instrumental drift.
+2. **OPD calibration** — zero crossings of the HeNe reference interferogram were used to construct a locally calibrated optical-path-difference axis.
+3. **Resampling and apodisation** — the mercury interferogram was interpolated onto a uniform OPD grid and a Hamming window was applied to reduce finite-scan sidelobes.
+4. **Fourier transformation** — the processed interferogram was transformed from optical-path-difference space into wavelength space.
+5. **Spectral fitting** — Gaussian, Lorentzian and Voigt profiles were compared using reduced chi-squared to determine which model best described the measured mercury lines.
 
 ## Results
 
-### Wavelength Accuracy
+### Recovered Mercury Spectrum
 
-The fitted mercury wavelengths were:
+The reconstructed spectrum clearly recovered the strong green mercury emission line near **546 nm** and the yellow doublet near **577 nm and 579 nm**.
+
+<img width="700" alt="fig_DA2_Hg_spectrum_notch_band_and_zoom_coloured (6)" src="https://github.com/user-attachments/assets/7911de76-8734-4e9f-bde9-e9ed4b266974" />
+
+
+*Recovered visible mercury spectrum. The main green line and yellow doublet are clearly resolved, while smaller features around the green peak were investigated as possible instrumental sidelobes.*
+
+### Wavelength Accuracy and Line-Profile Fitting
+
+To determine the line centres accurately, I compared Gaussian, Lorentzian and Voigt models rather than selecting a profile based only on visual agreement.
+
+The **Voigt profile produced the lowest reduced chi-squared** for both the green line and yellow doublet and was therefore used for the final wavelength and linewidth measurements.
+
+<img width="700" alt="fig_DA4_Voigt_fits_green_yellow (6)" src="https://github.com/user-attachments/assets/87f3f2fc-0d1d-4b92-ad0b-6637d350f551" />
+
+*Voigt-profile fits to the green mercury line and yellow doublet used to determine the final line centres and widths.*
+
+The measured wavelengths were:
 
 | Emission line | Reference / nm | Measured / nm | Difference / nm |
 | --- | ---: | ---: | ---: |
@@ -81,72 +65,70 @@ The fitted mercury wavelengths were:
 | Yellow 1 | 576.9610 | 576.9631 | +0.0021 |
 | Yellow 2 | 579.0670 | 579.0702 | +0.0032 |
 
-All three measured line centres therefore agreed with the reference values to within approximately **0.002–0.003 nm**.
+All three measured line centres agreed with their reference wavelengths to within approximately **0.002–0.003 nm**.
 
-This was much smaller than the overall estimated wavelength uncertainty of approximately **0.02 nm**, meaning that the measured wavelengths were fully consistent with the reference values.
+The total estimated wavelength uncertainty was approximately **0.02 nm**, meaning that all three measurements were comfortably consistent with the reference values.
 
-### Uncertainty Budget
+### Understanding the Uncertainty
 
-I separated the wavelength uncertainty into three contributions:
+I separated the wavelength uncertainty into contributions from:
 
 - instrumental resolution
-- statistical uncertainty from fitting
+- statistical fitting uncertainty
 - residual calibration uncertainty
 
-The total uncertainty was approximately **0.02 nm for all three lines**.
+The fitting uncertainties were only of order **10⁻⁴ nm**, while the calibration differences were around **0.002–0.003 nm**.
 
-The fitting uncertainties were only of order `10^-4 nm`, while calibration offsets were around `0.002–0.003 nm`. The dominant limitation was therefore the finite instrumental resolution rather than statistical fitting noise. 
+The dominant limitation was therefore the **finite instrumental resolution rather than statistical fitting noise**.
 
-This was an important result because it showed that improving the fitting procedure alone would not substantially improve the final measurement precision.
+This was important because it showed that improving the fitting algorithm alone would not substantially improve the overall measurement precision.
 
-### Spectral Resolution
+### Spectral Resolution and Scan Length
 
-I then investigated how spectral resolution changed with interferometer scan length.
+I also investigated how the maximum optical path difference affected spectral resolution.
 
-The original 60-minute interferogram was repeatedly truncated to shorter OPD ranges and the complete analysis pipeline was rerun for each scan length.
+The original interferogram was repeatedly truncated to shorter OPD ranges and the analysis was rerun for each scan length.
 
-For shorter scans, the measured green-line width decreased approximately as:
 
-`1 / Lmax`
+For shorter scans, the measured width of the green mercury line decreased approximately according to the expected $1/L_{\max}$ relationship for a Fourier-transform spectrometer limited by finite optical path difference.
 
-which is the expected behaviour for an interferometer whose resolution is limited by finite optical path difference.
 
-However, for longer scans the improvement became progressively smaller and the measured FWHM approached a limiting value of approximately **0.1–0.12 nm**. 
+<img width="500" alt="Green_line_FWHM_vs_scan_range (5)" src="https://github.com/user-attachments/assets/ab847111-07c0-46b3-bba7-ac848624277b" />
 
-<!-- Add FWHM vs OPD scan range figure here -->
+*Measured green-line FWHM as the maximum OPD scan range increases, compared with the expected instrumental width.*
 
-This showed that increasing scan length improves resolution only until other effects become important, including:
+At larger scan ranges, however, the improvement became progressively smaller. The measured FWHM approached approximately **0.1–0.12 nm**, despite the theoretical instrumental width continuing to decrease.
 
-- the intrinsic mercury line width
+This showed that increasing scan length improves spectral resolution only until other effects become significant, including:
+
+- intrinsic mercury line width
 - Hamming apodisation
 - slow instrumental drift
-- noise
+- measurement noise
 
-### Instrumental Artefacts
+### Distinguishing Physical Features from Artefacts
 
-Small features appeared around the strong 546 nm green line.
+Small features were visible around the strong 546 nm green line.
 
-Rather than interpreting them immediately as additional mercury transitions, I compared their behaviour with what would be expected from the finite-OPD instrumental response.
+Rather than assuming that these represented additional mercury transitions, I investigated whether they could instead result from the finite-OPD response of the interferometer.
 
-Their approximate symmetry around the main peak, sinc-like appearance and dependence on scan length and apodisation indicated that they were primarily **instrumental sidelobes rather than real spectral lines**. 
+Their approximate symmetry around the main peak, sinc-like appearance and sensitivity to scan length and apodisation indicated that they were primarily **instrumental sidelobes rather than genuine spectral lines**.
 
-This was an important part of the analysis because it demonstrated the need to distinguish genuine physical features from artefacts introduced by the measurement and processing pipeline.
+This was an important part of the analysis because it demonstrated that features appearing in experimental data should not automatically be interpreted as physical effects.
 
 ## Conclusion
 
 The Michelson interferometer successfully operated as a Fourier-transform spectrometer for a low-pressure mercury lamp.
 
-Using local calibration from the HeNe reference, the main mercury emission lines were recovered to within approximately **0.002–0.003 nm of reference values**, comfortably inside the total estimated wavelength uncertainty of approximately **0.02 nm**.
+Using the HeNe reference for local OPD calibration, the main mercury emission lines were recovered to within approximately **0.002–0.003 nm of their reference wavelengths**, comfortably inside the total estimated uncertainty of approximately **0.02 nm**.
 
-The experiment also demonstrated the trade-off between scan length and spectral resolution. Increasing the maximum optical path difference initially improved the measured resolution approximately as expected from the theoretical `1 / Lmax` relationship, but the improvement eventually approached a floor of approximately **0.1 nm** as other broadening mechanisms became dominant.
+The experiment also demonstrated the trade-off between scan length and spectral resolution. Increasing the maximum OPD initially improved resolution in line with the expected **1 / Lmax** behaviour, but the improvement eventually approached a floor of approximately **0.1 nm** as other broadening mechanisms became dominant.
 
-Overall, the experiment showed that a relatively simple Michelson Fourier-transform spectrometer can recover the main mercury emission wavelengths with approximately **0.02 nm accuracy and sub-0.2 nm spectral resolution**, provided that the optical path difference is carefully calibrated. 
+Overall, the experiment showed that a relatively simple Michelson Fourier-transform spectrometer can recover the main mercury emission wavelengths with approximately **0.02 nm wavelength uncertainty and sub-0.2 nm spectral resolution**, provided that the optical path difference is carefully calibrated.
 
 ## Why This Project Is Useful
 
-Fourier-transform spectroscopy is widely used wherever precise spectral information is required.
-
-Similar methods are used in areas including:
+Fourier-transform spectroscopy is used wherever precise spectral information is required, including:
 
 - astronomy
 - atomic and molecular spectroscopy
@@ -154,33 +136,25 @@ Similar methods are used in areas including:
 - remote sensing
 - optical instrumentation
 
-More generally, this project demonstrates an important feature of experimental data analysis: the final result depends not only on collecting data, but also on calibration, signal processing, model selection, uncertainty analysis and understanding the limitations of the measurement system.
+More broadly, this project demonstrated how a reliable experimental result depends on the entire analysis chain rather than only the quality of the raw data.
+
+Calibration, signal processing, model selection, uncertainty analysis and understanding the limitations of the instrument all influenced the final measurement.
 
 ## What I Learned
 
-This project significantly developed my approach to experimental data analysis.
+This project taught me not to underestimate instrumental effects. It is easy to assume that unexpected features or limitations come from the underlying physics, when in reality the instrument or analysis method may be responsible for much of what is being observed.
 
-I learned that obtaining a physically meaningful result often requires building a complete processing pipeline rather than applying a single calculation to raw data. In this experiment, filtering, calibration, interpolation, Fourier transformation, detector-response correction and peak fitting all affected the final spectrum.
+I also learned the importance of testing assumptions quantitatively rather than relying only on visual judgement. A model or result can look convincing, but that is not enough evidence on its own.
 
-I also developed a better understanding of **model comparison**. Rather than choosing a Gaussian, Lorentzian or Voigt profile because one appeared visually convincing, I compared the fits quantitatively using reduced chi-squared before selecting the Voigt model.
+Finally, I learned that improving data quality is not always as simple as collecting more data. I initially assumed that increasing the scan length would continue to improve the spectral resolution, but later found that other limitations had become more important. This reinforced the importance of testing different possible limitations before deciding what actually needs to be improved.
 
-The uncertainty analysis was particularly useful. Separating instrumental, calibration and fitting contributions showed me that the largest source of uncertainty is not always the most obvious one. In this case, statistical fitting errors were very small, while the finite instrumental resolution dominated the final wavelength uncertainty.
+## Applying What I Learned
 
-Finally, investigating the apparent sidelobes reinforced the importance of questioning unexpected features in data. A feature in a plot is not automatically a physical effect; it may instead result from the instrument, processing method or assumptions used in the analysis.
+In future projects, I would try to support my assumptions and judgements with quantitative evidence before relying on them.
 
-## What I Would Improve
+I would also avoid over-optimising one part of a project at the expense of everything else. In this experiment, I focused too heavily on increasing the scan length because I assumed that more data would keep improving the result. That made it easier to overlook other limitations that were becoming more important.
 
-If I repeated the experiment, I would focus primarily on reducing systematic rather than statistical uncertainty.
-
-Possible improvements would include:
-
-- improving the absolute OPD calibration and reducing differences between the optical paths followed by the HeNe and mercury beams
-- improving long-term thermal and mechanical stability during the 60-minute scan
-- investigating alternative apodisation windows and their effect on spectral resolution and sidelobes
-- explicitly modelling the measured line profile as a convolution of the source spectrum with the finite-OPD instrumental response
-- accounting more carefully for correlations in the noise introduced by filtering and Fourier transformation
-
-These improvements would provide a more physically complete model of the measured spectrum and could help reduce the remaining difference between the measured line width and the ideal instrumental resolution.
+A useful lesson for me was that the best solution is often a trade-off rather than making one part of a project as perfect as possible. A balanced analysis, where each important component is developed to a strong and consistent standard, can be more useful than maximising one part while neglecting the rest.
 
 ## Technologies & Skills
 
@@ -198,6 +172,6 @@ These improvements would provide a more physically complete model of the measure
 
 ## Academic Integrity
 
-This repository is a portfolio summary of an assessed university laboratory project.
+This repository is a portfolio summary of assessed university laboratory work.
 
 The full submitted report, raw data and assessed analysis code are not publicly provided. The purpose of this repository is to summarise the experimental approach, analysis, results and skills developed during the project.
