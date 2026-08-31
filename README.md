@@ -1,6 +1,6 @@
 # Fourier-Transform Spectroscopy of a Mercury Lamp
 
-**Second-year experimental physics project — Imperial College London | Report mark: 86%**
+**Second-year experimental physics project - Imperial College London | Report mark: 86%**
 
 ## Overview
 
@@ -30,11 +30,11 @@ The full measurement used a 60-minute scan, corresponding to a maximum calibrate
 
 The raw interferograms were converted into a calibrated spectrum through several processing stages:
 
-1. **Signal filtering** — high-pass filtering removed DC offsets and slow instrumental drift.
-2. **OPD calibration** — zero crossings of the HeNe reference interferogram were used to construct a locally calibrated optical-path-difference axis.
-3. **Resampling and apodisation** — the mercury interferogram was interpolated onto a uniform OPD grid and a Hamming window was applied to reduce finite-scan sidelobes.
-4. **Fourier transformation** — the processed interferogram was transformed from optical-path-difference space into wavelength space.
-5. **Spectral fitting** — Gaussian, Lorentzian and Voigt profiles were compared using reduced chi-squared to determine which model best described the measured mercury lines.
+1. **Signal filtering**: high-pass filtering removed DC offsets and slow instrumental drift.
+2. **OPD calibration**: zero crossings of the HeNe reference interferogram were used to construct a locally calibrated optical-path-difference axis.
+3. **Resampling and apodisation**: the mercury interferogram was interpolated onto a uniform OPD grid and a Hamming window was applied to reduce finite-scan sidelobes.
+4. **Fourier transformation**: the processed interferogram was transformed from optical-path-difference space into wavelength space.
+5. **Spectral fitting**: Gaussian, Lorentzian and Voigt profiles were compared using reduced chi-squared to determine which model best described the measured mercury lines.
 
 ## Results
 
@@ -174,4 +174,4 @@ A useful lesson for me was that the best solution is often a trade-off rather th
 
 This repository is a portfolio summary of assessed university laboratory work.
 
-The full submitted report, raw data and assessed analysis code are not publicly provided. The purpose of this repository is to summarise the experimental approach, analysis, results and skills developed during the project.
+The full submitted report, raw data and analysis code are not publicly provided. The purpose of this repository is to summarise the experimental approach, analysis, results and skills developed during the project.
